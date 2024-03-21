@@ -29,7 +29,7 @@ namespace Demo.PL
 
 			services.AddDbContext<MVCAppContext>(options =>
 			{
-				options.UseSqlServer("Server = .; Database = MVCApp; Trusted_Connection = true;");
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 			});
 		}
 
