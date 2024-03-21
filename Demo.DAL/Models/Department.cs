@@ -11,7 +11,7 @@ namespace Demo.DAL.Models
 	{
 		public int Id { get; set; }
 		[Required(ErrorMessage = "Name is Required")]
-		[MaxLength(100)]
+		[MaxLength(50)]
 		public string Name { get; set; }
 		[Required(ErrorMessage = "Name is Required")]
 		public string Code { get; set; }
