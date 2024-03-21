@@ -18,27 +18,32 @@ namespace Demo.BLL.Repositories
 		}
 		public int Add(Department department)
 		{
-			throw new NotImplementedException();
+			_dbContext.Add(department);
+			return _dbContext.SaveChanges();
 		}
 
-		public int Delete(int id)
+		public int Delete(Department department)
 		{
-			throw new NotImplementedException();
+			_dbContext.Remove(department);
+			return _dbContext.SaveChanges();
 		}
 
 		public IEnumerable<Department> GetAll()
-		{
-			throw new NotImplementedException();
-		}
+			=> _dbContext.Departments.ToList();
 
 		public Department GetById(int id)
 		{
-			throw new NotImplementedException();
+			//var department = _dbContext.Departments.Local.Where(d => d.Id == id).FirstOrDefault();
+			//if (department is null)
+			//	department = _dbContext.Departments.Where(d => d.Id == id).FirstOrDefault();
+			//return department;
+			return _dbContext.Departments.Find(id);
 		}
 
 		public int Update(Department department)
 		{
-			throw new NotImplementedException();
+			_dbContext.Update(department);
+			return _dbContext.SaveChanges();
 		}
 	}
 }

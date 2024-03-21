@@ -13,6 +13,6 @@ namespace Demo.BLL.Interfaces
 		public Department GetById(int id);
 		public int Add(Department department);
 		public int Update(Department department);
-		public int Delete(int id);
+		public int Delete(Department department);
 	}
 }
