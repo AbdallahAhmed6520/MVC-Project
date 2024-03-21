@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Demo.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace Demo.DAL.Contexts
 	public class MVCApp : DbContext
 	{
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			optionsBuilder.UseSqlServer("");
-		}
+		=> optionsBuilder.UseSqlServer("Server = .; Database = MVCApp; Trusted_Connection = true;");
+
+		public DbSet<Department> Departments { get; set; }
 	}
 }
