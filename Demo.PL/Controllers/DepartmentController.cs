@@ -35,7 +35,7 @@ namespace Demo.PL.Controllers
             return View(department);
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id, string viewName = "Details")
         {
             if (id is null)
             {
@@ -46,6 +46,49 @@ namespace Demo.PL.Controllers
             {
                 return NotFound();
             }
+            return View(viewName, department);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            //if (id is null)
+            //{
+            //    return BadRequest(); //status code 400
+            //}
+            //var department = _departmentRepository.GetById(id.Value);
+            //if (department is null)
+            //{
+            //    return NotFound();
+            //}
+            //return View(department);
+            return Details(id, "Edit");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Department department, [FromRoute] int id)
+        {
+            if (id != department.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _departmentRepository.Update(department);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (System.Exception ex)
+                {
+                    //Log Exception
+                    //Form
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+
             return View(department);
         }
     }
