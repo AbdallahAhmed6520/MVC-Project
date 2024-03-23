@@ -93,7 +93,7 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
             return Details(id, "Delete");
         }
@@ -117,7 +117,7 @@ namespace Demo.PL.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
             }
-            return View(department);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
