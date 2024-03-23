@@ -91,5 +91,34 @@ namespace Demo.PL.Controllers
 
             return View(department);
         }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            return Details(id, "Delete");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Department department, [FromRoute] int id)
+        {
+            if (id != department.Id)
+            {
+                return BadRequest();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _departmentRepository.Delete(department);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (System.Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View(department);
+        }
     }
 }
+    
