@@ -35,6 +35,7 @@ namespace Demo.PL
 			});//Allow Dpendency Injection
 
 			services.AddScoped<IDepartmentRepository, DepartmentRepository>(); //Allow Dpendency Injection class DepartmentRepository
+			services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //Allow Dpendency Injection class EmployeeRepository
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
