@@ -29,7 +29,11 @@ namespace Demo.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                _departmentRepository.Add(department);
+                int result = _departmentRepository.Add(department);
+                // 3. Temp Data => Dictionary Object
+                // Transfer Data From Action To Action
+                if (result > 0)
+                    TempData["Message"] = "Department Is Created Sucessfully";
                 return RedirectToAction("Index");
             }
             return View(department);
@@ -121,4 +125,3 @@ namespace Demo.PL.Controllers
         }
     }
 }
-    

@@ -16,6 +16,12 @@ namespace Demo.PL.Controllers
         public IActionResult Index()
         {
             var employees = _employeeRepository.GetAll();
+            // 1. ViewData => KeyValuePair[Dictionary Object]
+            // Transfer Data From Controller [Action] T Its View
+            // .Net FrameWork 3.5
+            //ViewData["Message"] = "Hello From View Data";
+
+            //ViewBag.Message = "Hello From View Bag";
             return View(employees);
         }
 

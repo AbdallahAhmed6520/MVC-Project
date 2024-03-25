@@ -1,7 +1,21 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "All Employees";
+//     string VDataMessage = ViewData["Message"] as string;
+//     //Enforce Type Safety -> Requires Casting [Strongly Typed]
+
+//     string VBagMessage = ViewBag.Message;
+//     //Cant Enforce Type Safety -> Not Requires Casting [Weakly Typed]
 }
+
+@* <div class="alert alert-success">
+    @ViewData["Message"]
+</div> *@
+
+@* <div class="alert alert-primary">
+    @ViewBag.Message
+</div> *@
+
 <a asp-action="Create" class="btn btn-success">Add New Employee</a>
 <br />
 @if (Model.Count() > 0)
