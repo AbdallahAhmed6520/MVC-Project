@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Demo.DAL.Models
 {
@@ -33,5 +34,14 @@ namespace Demo.DAL.Models
         public DateTime HireDate { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
+
+        [ForeignKey("Department")]
+        public int? DepartmentId { get; set; }
+        //FK Optional => OnDelete : Restricted (مينفعش امسح قسم موجود فيه موظفين)
+        //FK Required => OnDelete : Cascade (لما امسح قسم هيمسح الموظفين معاه)
+
+        [InverseProperty("Employees")]
+
+        public Department Department { get; set; }
     }
 }
