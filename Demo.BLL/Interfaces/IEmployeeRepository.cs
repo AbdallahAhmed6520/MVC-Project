@@ -10,6 +10,8 @@ namespace Demo.BLL.Interfaces
     public interface IEmployeeRepository:IGenericRepository<Employee>
     {
         IQueryable<Employee> GetEmployeesByAddress(string address);
+        IQueryable<Employee> GetEmployeesByName(string SearchValue);
+
         //public IEnumerable<Employee> GetAll();
         //public Employee GetById(int id);
         //public int Add(Employee employee);

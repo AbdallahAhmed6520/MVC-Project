@@ -19,6 +19,11 @@ namespace Demo.BLL.Repositories
             return _dbContext.Employees.Where(E => E.Address == address);
         }
 
+        public IQueryable<Employee> GetEmployeesByName(string SearchValue)
+        {
+            return _dbContext.Employees.Where(E=>E.Name.ToLower().Contains(SearchValue.ToLower()));
+        }
+
         //private readonly MVCAppContext _dbContext;
         //public EmployeeRepository(MVCAppContext dbContext)
         //{

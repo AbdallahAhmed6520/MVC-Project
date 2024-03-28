@@ -3,7 +3,7 @@
     ViewData["Title"] = "Index";
 }
 @if (@TempData["Message"] is not null){
-    <div class="alert alert-success">
+    <div id="MessageDiv"class ="alert alert-success">
         @TempData["Message"]
     </div>
 }

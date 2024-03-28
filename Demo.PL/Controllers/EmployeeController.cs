@@ -1,6 +1,7 @@
 ﻿using Demo.BLL.Interfaces;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Demo.PL.Controllers
 {
@@ -15,16 +16,25 @@ namespace Demo.PL.Controllers
             _departmentRepository = departmentRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string SearchValue)
         {
-            var employees = _employeeRepository.GetAll();
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchValue))
+            {
+                employees = _employeeRepository.GetAll();
+                }
+            else
+            {
+                employees = _employeeRepository.GetEmployeesByName(SearchValue);
+            }
+            return View(employees);
+
             // 1. ViewData => KeyValuePair[Dictionary Object]
             // Transfer Data From Controller [Action] T Its View
             // .Net FrameWork 3.5
             //ViewData["Message"] = "Hello From View Data";
 
             //ViewBag.Message = "Hello From View Bag";
-            return View(employees);
         }
 
         [HttpGet]
