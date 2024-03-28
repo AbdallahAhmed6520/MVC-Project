@@ -2,12 +2,12 @@
 @model EmployeeViewModel
 @{
     ViewData["Title"] = "Create";
-    var departments = new SelectList(@ViewBag.Departments, "Id", "Name");
+    // var departments = new SelectList(@ViewBag.Departments, "Id", "Name");
 }
-@* @inject IDepartmentRepository DepaertmentRepo
+@inject IDepartmentRepository DepaertmentRepo
 @{
     var departments = new SelectList(DepaertmentRepo.GetAll(), "Id", "Name");
-} *@
+}
 
 <h1>Add New Employee</h1>
 <br />

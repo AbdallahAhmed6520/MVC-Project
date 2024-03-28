@@ -9,16 +9,13 @@ namespace Demo.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository,
-            IDepartmentRepository departmentRepository,
+        public EmployeeController(IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -27,11 +24,11 @@ namespace Demo.PL.Controllers
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchValue))
             {
-                employees = _employeeRepository.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                employees = _employeeRepository.GetEmployeesByName(SearchValue);
+                employees = _unitOfWork.EmployeeRepository.GetEmployeesByName(SearchValue);
             }
             var MappedEmployees = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(MappedEmployees);
@@ -47,7 +44,7 @@ namespace Demo.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Departments = _departmentRepository.GetAll();
+            //ViewBag.Departments = _departmentRepository.GetAll();
             return View();
         }
 
@@ -57,7 +54,8 @@ namespace Demo.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                _employeeRepository.Add(MappedEmployee);
+                _unitOfWork.EmployeeRepository.Add(MappedEmployee);
+                _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
             return View(employeeVM);
@@ -68,7 +66,7 @@ namespace Demo.PL.Controllers
             if (id is null)
                 return BadRequest(); //status code 400
 
-            var employee = _employeeRepository.GetById(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.GetById(id.Value);
 
             if (employee is null)
                 return NotFound();
@@ -108,7 +106,8 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
-                    _employeeRepository.Update(MappedEmployee);
+                    _unitOfWork.EmployeeRepository.Update(MappedEmployee);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -140,7 +139,8 @@ namespace Demo.PL.Controllers
                 try
                 {
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
-                    _employeeRepository.Delete(MappedEmployee);
+                    _unitOfWork.EmployeeRepository.Delete(MappedEmployee);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
