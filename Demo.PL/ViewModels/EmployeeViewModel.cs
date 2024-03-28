@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Demo.DAL.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Demo.DAL.Models
+namespace Demo.PL.ViewModels
 {
-    public class Employee
+    public class EmployeeViewModel
     {
         public int Id { get; set; }
 
-        [Required/*(ErrorMessage = "Name Is Required")*/]
-        [MaxLength(50/*, ErrorMessage = "Max Length Is 50"*/)]
-        //[MinLength(5, ErrorMessage = "Min Length Is 5")]
+        [Required(ErrorMessage = "Name Is Required")]
+        [MaxLength(50, ErrorMessage = "Max Length Is 50")]
+        [MinLength(5, ErrorMessage = "Min Length Is 5")]
         public string Name { get; set; }
 
-        //[Range(22, 35, ErrorMessage = "Age Must Be In Range From 22 To 35")]
+        [Range(22, 35, ErrorMessage = "Age Must Be In Range From 22 To 35")]
         public int? Age { get; set; }
 
         //[RegularExpression("^[0,9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",
@@ -25,15 +26,15 @@ namespace Demo.DAL.Models
 
         public bool IsActive { get; set; }
 
-        //[EmailAddress]
+        [EmailAddress]
         public string Email { get; set; }
 
-        //[Phone]
+        [Phone]
         public string PhoneNumber { get; set; }
 
         public DateTime HireDate { get; set; }
 
-        public DateTime CreationDate { get; set; } = DateTime.Now;
+        //public DateTime CreationDate { get; set; } = DateTime.Now;
 
         [ForeignKey("Department")]
         public int? DepartmentId { get; set; }
