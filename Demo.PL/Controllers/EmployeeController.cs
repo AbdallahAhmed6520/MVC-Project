@@ -44,7 +44,7 @@ namespace Demo.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            //ViewBag.Departments = _departmentRepository.GetAll();
+            ViewBag.Departments = _unitOfWork.DepartmentRepository.GetAll();
             return View();
         }
 
@@ -72,6 +72,9 @@ namespace Demo.PL.Controllers
                 return NotFound();
 
             var MappedEmployee = _mapper.Map<EmployeeViewModel>(employee);
+
+            var department = _unitOfWork.DepartmentRepository.GetById((int)employee.DepartmentId);
+            ViewBag.DepartmentName = department.Name;
 
             return View(viewName, MappedEmployee);
         }
