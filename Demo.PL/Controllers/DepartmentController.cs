@@ -6,15 +6,15 @@ namespace Demo.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentController(IDepartmentRepository departmentRepository)//Ask CLR for createing Object from Class Implement Interface IDepartmentRepository
+        public DepartmentController(IUnitOfWork unitOfWork)//Ask CLR for createing Object from Class Implement Interface IDepartmentRepository
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
             return View(departments);
         }
 
@@ -29,7 +29,8 @@ namespace Demo.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                int result = _departmentRepository.Add(department);
+                _unitOfWork.DepartmentRepository.Add(department);
+                int result = _unitOfWork.Complete();
                 // 3. Temp Data => Dictionary Object
                 // Transfer Data From Action To Action
                 if (result > 0)
@@ -45,7 +46,7 @@ namespace Demo.PL.Controllers
             {
                 return BadRequest(); //status code 400
             }
-            var department = _departmentRepository.GetById(id.Value);
+            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
             if (department is null)
             {
                 return NotFound();
@@ -60,7 +61,7 @@ namespace Demo.PL.Controllers
             //{
             //    return BadRequest(); //status code 400
             //}
-            //var department = _departmentRepository.GetById(id.Value);
+            //var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
             //if (department is null)
             //{
             //    return NotFound();
@@ -82,7 +83,8 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
-                    _departmentRepository.Update(department);
+                    _unitOfWork.DepartmentRepository.Update(department);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -113,7 +115,8 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
-                    _departmentRepository.Delete(department);
+                    _unitOfWork.DepartmentRepository.Delete(department);
+                    _unitOfWork.Complete();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
