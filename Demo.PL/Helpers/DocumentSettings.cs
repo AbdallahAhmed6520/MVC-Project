@@ -28,5 +28,19 @@ namespace Demo.PL.Helpers
             //5. Return File Name
             return FileName;
         }
+
+        //Delete
+        public static void DeleteFile(string FileName, string FolderName)
+        {
+            //1. Get File Path
+            string FilePath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot\\Files", FolderName, FileName);
+
+            //2. Check File is Exist Or Not
+            if(File.Exists(FilePath))
+            {
+                //Remove File
+                File.Delete(FilePath);
+            }
+        }
     }
 }
