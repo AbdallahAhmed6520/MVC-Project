@@ -12,12 +12,17 @@
 <h1>Add New Employee</h1>
 <br />
 
-<form asp-action="Create">
+<form asp-action="Create"enctype="multipart/form-data">
     @* <partial name="PartialViews/CreateEditPartialView" /> *@
     <div class="form-group">
         <label class="col-form-label" asp-for="Name"></label>
         <input class="form-control" asp-for="Name" />
         <span asp-validation-for="Name" class="text-danger"></span>
+    </div>  
+    
+    <div class="form-group">
+        <label class="col-form-label" asp-for="Image"></label>
+        <input class="form-control" asp-for="Image" />
     </div>
 
     <div class="form-group">

@@ -1,4 +1,5 @@
 ﻿using Demo.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,10 @@ namespace Demo.PL.ViewModels
         public string PhoneNumber { get; set; }
 
         public DateTime HireDate { get; set; }
+
+        public IFormFile Image { get; set; }
+
+        public string ImageName { get; set; }
 
         //public DateTime CreationDate { get; set; } = DateTime.Now;
 
