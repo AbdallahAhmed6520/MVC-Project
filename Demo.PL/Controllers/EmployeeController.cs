@@ -110,6 +110,7 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
+                    employeeViewModel.ImageName = DocumentSettings.UplodaFile(employeeViewModel.Image,"Images");
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
                     _unitOfWork.EmployeeRepository.Update(MappedEmployee);
                     _unitOfWork.Complete();

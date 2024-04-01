@@ -4,13 +4,13 @@ using System;
 
 namespace Demo.BLL.Repositories
 {
-    public class UnitOfWork : IUnitOfWork,IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly MVCAppContext _dbcontext;
 
         public IEmployeeRepository EmployeeRepository { get; set; }
         public IDepartmentRepository DepartmentRepository { get; set; }
-        public UnitOfWork(MVCAppContext dbcontext) 
+        public UnitOfWork(MVCAppContext dbcontext)
         {
             EmployeeRepository = new EmployeeRepository(dbcontext);
             DepartmentRepository = new DepartmentRepository(dbcontext);
