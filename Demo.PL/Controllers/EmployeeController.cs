@@ -73,7 +73,7 @@ namespace Demo.PL.Controllers
             if (employee is null)
                 return NotFound();
 
-            var MappedEmployee = _mapper.Map<EmployeeViewModel>(employee);
+            var MappedEmployee = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             var department = _unitOfWork.DepartmentRepository.GetById((int)employee.DepartmentId);
             ViewBag.DepartmentName = department.Name;
@@ -84,6 +84,7 @@ namespace Demo.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            ViewBag.Departments = _unitOfWork.DepartmentRepository.GetAll();
             //if (id is null)
             //{
             //    return BadRequest(); //status code 400
@@ -110,7 +111,7 @@ namespace Demo.PL.Controllers
             {
                 try
                 {
-                    employeeViewModel.ImageName = DocumentSettings.UplodaFile(employeeViewModel.Image,"Images");
+                    employeeViewModel.ImageName = DocumentSettings.UplodaFile(employeeViewModel.Image, "Images");
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
                     _unitOfWork.EmployeeRepository.Update(MappedEmployee);
                     _unitOfWork.Complete();

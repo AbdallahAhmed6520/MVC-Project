@@ -1,6 +1,7 @@
 ﻿using Demo.BLL.Interfaces;
 using Demo.DAL.Contexts;
 using System;
+using System.Threading.Tasks;
 
 namespace Demo.BLL.Repositories
 {
@@ -17,9 +18,9 @@ namespace Demo.BLL.Repositories
             _dbcontext = dbcontext;
         }
 
-        public int Complete()
+        public async Task<int> Complete()
         {
-            return _dbcontext.SaveChanges();
+            return await _dbcontext.SaveChangesAsync();
         }
 
         public void Dispose()
