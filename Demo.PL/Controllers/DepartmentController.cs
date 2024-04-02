@@ -1,6 +1,7 @@
 ﻿using Demo.BLL.Interfaces;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
@@ -12,9 +13,9 @@ namespace Demo.PL.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _unitOfWork.DepartmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             return View(departments);
         }
 
@@ -25,12 +26,12 @@ namespace Demo.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public async Task<IActionResult> Create(Department department)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.DepartmentRepository.Add(department);
-                int result = _unitOfWork.Complete();
+                await _unitOfWork.DepartmentRepository.AddAsync(department);
+                int result = await _unitOfWork.CompleteAsync();
                 // 3. Temp Data => Dictionary Object
                 // Transfer Data From Action To Action
                 if (result > 0)
@@ -40,13 +41,13 @@ namespace Demo.PL.Controllers
             return View(department);
         }
 
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null)
             {
                 return BadRequest(); //status code 400
             }
-            var department = _unitOfWork.DepartmentRepository.GetById(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id.Value);
             if (department is null)
             {
                 return NotFound();
@@ -55,7 +56,7 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public Task<IActionResult> Edit(int? id)
         {
             //if (id is null)
             //{
@@ -84,7 +85,7 @@ namespace Demo.PL.Controllers
                 try
                 {
                     _unitOfWork.DepartmentRepository.Update(department);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -99,7 +100,7 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public Task<IActionResult> Delete(int? id)
         {
             return Details(id, "Delete");
         }
@@ -116,7 +117,7 @@ namespace Demo.PL.Controllers
                 try
                 {
                     _unitOfWork.DepartmentRepository.Delete(department);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)

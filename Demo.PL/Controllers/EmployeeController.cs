@@ -5,6 +5,7 @@ using Demo.PL.Helpers;
 using Demo.PL.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
@@ -20,12 +21,12 @@ namespace Demo.PL.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index(string SearchValue)
+        public async Task<IActionResult> Index(string SearchValue)
         {
             IEnumerable<Employee> employees;
             if (string.IsNullOrEmpty(SearchValue))
             {
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+                employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
             }
             else
             {
@@ -43,48 +44,48 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Departments = _unitOfWork.DepartmentRepository.GetAll();
+            ViewBag.Departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel employeeVM)
+        public async Task<IActionResult> Create(EmployeeViewModel employeeVM)
         {
             if (ModelState.IsValid)
             {
                 employeeVM.ImageName = DocumentSettings.UplodaFile(employeeVM.Image, "Images");
                 var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                _unitOfWork.EmployeeRepository.Add(MappedEmployee);
-                _unitOfWork.Complete();
+                await _unitOfWork.EmployeeRepository.AddAsync(MappedEmployee);
+                await _unitOfWork.CompleteAsync();
                 return RedirectToAction("Index");
             }
             return View(employeeVM);
         }
 
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (id is null)
                 return BadRequest(); //status code 400
 
-            var employee = _unitOfWork.EmployeeRepository.GetById(id.Value);
+            var employee = await _unitOfWork.EmployeeRepository.GetByIdAsync(id.Value);
 
             if (employee is null)
                 return NotFound();
 
             var MappedEmployee = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
-            var department = _unitOfWork.DepartmentRepository.GetById((int)employee.DepartmentId);
+            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync((int)employee.DepartmentId);
             ViewBag.DepartmentName = department.Name;
 
             return View(viewName, MappedEmployee);
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public Task<IActionResult> Edit(int? id)
         {
-            ViewBag.Departments = _unitOfWork.DepartmentRepository.GetAll();
+            ViewBag.Departments = _unitOfWork.DepartmentRepository.GetAllAsync();
             //if (id is null)
             //{
             //    return BadRequest(); //status code 400
@@ -114,7 +115,7 @@ namespace Demo.PL.Controllers
                     employeeViewModel.ImageName = DocumentSettings.UplodaFile(employeeViewModel.Image, "Images");
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
                     _unitOfWork.EmployeeRepository.Update(MappedEmployee);
-                    _unitOfWork.Complete();
+                    _unitOfWork.CompleteAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (System.Exception ex)
@@ -129,25 +130,25 @@ namespace Demo.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public Task<IActionResult> Delete(int? id)
         {
             return Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(EmployeeViewModel employeeViewModel, [FromRoute] int id)
+        public async Task<IActionResult> Delete(EmployeeViewModel employeeViewModel, [FromRoute] int id)
         {
             if (id != employeeViewModel.Id)
             {
                 return BadRequest();
-            }
+            }   
             if (ModelState.IsValid)
             {
                 try
                 {
                     var MappedEmployee = _mapper.Map<EmployeeViewModel, Employee>(employeeViewModel);
                     _unitOfWork.EmployeeRepository.Delete(MappedEmployee);
-                    int result = _unitOfWork.Complete();
+                    int result = await _unitOfWork.CompleteAsync();
                     if (result > 0 && employeeViewModel.ImageName is not null)
                     {
                         DocumentSettings.DeleteFile(employeeViewModel.ImageName, "Images");

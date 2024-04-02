@@ -18,7 +18,7 @@ namespace Demo.BLL.Repositories
             _dbcontext = dbcontext;
         }
 
-        public async Task<int> Complete()
+        public async Task<int> CompleteAsync()
         {
             return await _dbcontext.SaveChangesAsync();
         }
