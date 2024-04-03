@@ -3,6 +3,7 @@ using Demo.BLL.Repositories;
 using Demo.DAL.Contexts;
 using Demo.DAL.Models;
 using Demo.PL.MappingProfile;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -47,9 +48,15 @@ namespace Demo.PL
 				options.Password.RequireLowercase = true;
 				options.Password.RequireUppercase = true;
 			})
-					.AddEntityFrameworkStores<MVCAppContext>();
+					.AddEntityFrameworkStores<MVCAppContext>()
+					.AddDefaultTokenProviders();
 			//services.AddScoped<UserManager<ApplicationUser>>();
-			services.AddAuthentication();
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options =>
+				{
+					options.LoginPath = "Account/Loin";
+					options.AccessDeniedPath = "Home/Error";
+				});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,13 +77,15 @@ namespace Demo.PL
 
 			app.UseRouting();
 
+			app.UseAuthentication();
+
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "{controller=Home}/{action=Index}/{id?}");
+					pattern: "{controller=Account}/{action=Login}/{id?}");
 			});
 		}
 	}
