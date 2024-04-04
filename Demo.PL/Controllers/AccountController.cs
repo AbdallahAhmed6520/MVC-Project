@@ -97,5 +97,12 @@ namespace Demo.PL.Controllers
 			}
 			return View(model);
 		}
+
+		//SIGN OUT
+		public new async Task<IActionResult> SignOut()
+		{
+			await _signInManager.SignOutAsync();
+			return RedirectToAction(nameof(Login));
+		}
 	}
 }
