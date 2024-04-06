@@ -151,5 +151,37 @@ namespace Demo.PL.Controllers
         {
             return View();
         }
+
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string email = (string)TempData["email"];
+                string token = (string)TempData["token"];
+                var user = await _userManager.FindByEmailAsync(email);
+
+                var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View(model);
+        }
     }
 }
