@@ -8,7 +8,7 @@ namespace Demo.PL.MappingProfile
     {
         public UserProfile()
         {
-            CreateMap<ApplicationUser,UserViewModel>();
+            CreateMap<ApplicationUser,UserViewModel>().ReverseMap();
         }
     }
 }

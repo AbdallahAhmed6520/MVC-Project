@@ -32,6 +32,7 @@ namespace Demo.PL.Controllers
                         FName = U.FName,
                         LName = U.LName,
                         Email = U.Email,
+                        PhoneNumber = U.PhoneNumber,
                         Roles = _userManager.GetRolesAsync(U).Result
                     }).ToListAsync();
                 return View(users);
@@ -63,6 +64,39 @@ namespace Demo.PL.Controllers
             var MappedUser = _mapper.Map<UserViewModel>(user);
             return View(ViewName, MappedUser);
 
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            return await Details(id, "Edit");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAsync(UserViewModel model, [FromRoute] string id)
+        {
+            if (id != model.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //var user = _mapper.Map<UserViewModel, ApplicationUser>(model);
+                    var user = await _userManager.FindByIdAsync(id);
+                    user.PhoneNumber = model.PhoneNumber;
+                    user.FName = model.FName;
+                    user.LName = model.LName;
+                    await _userManager.UpdateAsync(user);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (System.Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View(model);
         }
     }
 }
