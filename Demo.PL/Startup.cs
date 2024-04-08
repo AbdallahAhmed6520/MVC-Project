@@ -41,7 +41,8 @@ namespace Demo.PL
 
             services.AddAutoMapper(M => M.AddProfiles(new List<Profile>(){
                 new EmployeeProfile(),
-                new UserProfile()}));
+                new UserProfile(),
+                new RoleProfile()}));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
