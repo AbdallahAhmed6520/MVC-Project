@@ -36,5 +36,25 @@ namespace Demo.PL.Controllers
                 return View(new List<RoleViewModel>() { MappedRole });
             }
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(RoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var MappedRole = _mapper.Map<RoleViewModel, IdentityRole>(model);
+                await _roleManager.CreateAsync(MappedRole);
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(model);
+            }
+        }
     }
 }

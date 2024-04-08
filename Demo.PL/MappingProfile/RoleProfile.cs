@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Demo.PL.MappingProfile
 {
-    public class RoleProfile: Profile
+    public class RoleProfile : Profile
     {
         public RoleProfile()
         {
-            CreateMap<IdentityRole,RoleViewModel>().ReverseMap();
+            CreateMap<IdentityRole, RoleViewModel>().
+                ForMember(d => d.RoleName, o => o.MapFrom(s => s.Name))
+                .ReverseMap();
         }
     }
 }
