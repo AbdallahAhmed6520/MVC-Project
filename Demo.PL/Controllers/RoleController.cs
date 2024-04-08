@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Demo.PL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers
 {
+    [Authorize]
+
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -54,6 +57,72 @@ namespace Demo.PL.Controllers
             else
             {
                 return View(model);
+            }
+        }
+
+        public async Task<IActionResult> Details(string id, string ViewName = "Details")
+        {
+            if (id is null)
+                return BadRequest();
+            var Role = await _roleManager.FindByIdAsync(id);
+
+            if (Role is null)
+                return NotFound();
+
+            var MappedRole = _mapper.Map<RoleViewModel>(Role);
+            return View(ViewName, MappedRole);
+
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            return await Details(id, "Edit");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAsync(RoleViewModel model, [FromRoute] string id)
+        {
+            if (id != model.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //var user = _mapper.Map<UserViewModel, ApplicationUser>(model);
+                    var Role = await _roleManager.FindByIdAsync(id);
+                    Role.Name = model.RoleName;
+                    await _roleManager.UpdateAsync(Role);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (System.Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            return await Details(id, "Delete");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmDelete(string id)
+        {
+            try
+            {
+                var Role = await _roleManager.FindByIdAsync(id);
+                await _roleManager.DeleteAsync(Role);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (System.Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToAction("Error", "Home");
             }
         }
     }
